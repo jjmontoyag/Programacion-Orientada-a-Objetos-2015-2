@@ -1,0 +1,32 @@
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class MyFileReader {
+	
+	private final String filePath = "words.txt";
+    private BufferedReader br;
+    private ArrayList<String> list;
+    
+    public void initialize() throws IOException{
+    	
+    	   br = new BufferedReader(new FileReader(filePath));
+           String word = "null";
+    	   list = new ArrayList<String>();
+           
+    	   while((word = br.readLine()) != null ){
+    		
+    		   list.add(word);
+    	    
+    		}
+    	
+    }
+       
+    public String getRandomWord() throws IOException{
+    	
+    	
+    	return list.get((int)(Math.random() * list.size()));
+     }
+}

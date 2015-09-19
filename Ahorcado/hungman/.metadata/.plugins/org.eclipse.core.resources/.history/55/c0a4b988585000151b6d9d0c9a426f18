@@ -1,0 +1,35 @@
+
+import java.awt.font.TextAttribute;
+import java.io.IOException;
+
+public class Hangman {
+
+	public static void main(String[] args) throws IOException {
+		
+		boolean quit = false;
+		MyFileReader mfr = new MyFileReader();
+		mfr.initialize();
+		//System.out.println(mfr.getRandomWord());
+		
+		
+		
+		Game game = new Game();
+		game.setSecretWord("hello");
+		game.init();
+		Game.clearScreen();
+		
+		while(!quit){
+			
+			game.display();
+			game.getUserImput();
+			Game.clearScreen();
+			
+		}
+		
+		
+		
+		
+		
+	}
+
+}

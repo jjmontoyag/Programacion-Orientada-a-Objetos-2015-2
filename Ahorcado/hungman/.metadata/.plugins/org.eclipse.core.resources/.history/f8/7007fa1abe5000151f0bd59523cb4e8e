@@ -1,0 +1,215 @@
+
+import java.util.Scanner;
+
+
+public class Game {
+	
+
+	private char[] secretLetters;
+	private char[] guessedLetters;
+	private char[] usedLetters;
+	private char[] rightLetters;
+	private String hangman = "q(X_X)p";
+	private int tries;
+	private int playerMistakes;
+	private int playerGuessedLetters;
+	private int usedLetterCounter;
+	private boolean tryAgain = false;
+	public boolean QUIT = false;
+	public boolean CONTINUE = false;
+	public boolean NEWGAME = false;
+	
+	public void setSecretWord(String sw){
+		   
+		secretLetters = sw.toCharArray();
+		
+	}
+	
+	public void init(){
+		
+		tries = hangman.length();
+		guessedLetters = new char[secretLetters.length];
+		usedLetters = new char[tries + secretLetters.length];
+		usedLetters[0] = ' ';
+		rightLetters = new char[secretLetters.length];
+		playerMistakes = 0;
+		playerGuessedLetters = 0;
+		usedLetterCounter = 0;
+		
+		for(int i = 0; i < secretLetters.length; i++){
+			
+			guessedLetters[i] = '_';
+			
+		}
+		
+	}
+	
+	private boolean isRepeated(char l){
+		
+		for(int i = 0; i < usedLetters.length; i++){
+			
+			if(usedLetters[i] == l){
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkLetterIsRight(char l){
+		
+		boolean rightAnswer = false;
+		
+		if(!isRepeated(l)){
+		
+			usedLetters[usedLetterCounter++] = l;
+			tryAgain = false;
+		}else{
+			
+			tryAgain = true;
+			System.err.print("You tried this letter already!");
+		}
+		
+		for(int i = 0; i < secretLetters.length; i++){
+			
+			if(secretLetters[i] == l){
+				
+				rightLetters[i] = l;
+				guessedLetters[i] = l;
+				rightAnswer = true;
+				if(!tryAgain)
+				playerGuessedLetters++;
+			}
+		}
+		
+		if(!rightAnswer && !tryAgain){
+			
+			playerMistakes++;
+		}
+		
+	   return rightAnswer;
+	}
+	
+	
+	public void display(){
+		
+		System.out.print("Letters:");
+		System.out.print(toString(guessedLetters) + "      ");
+		System.out.print("You:");
+		System.out.print(hangman.substring(0, playerMistakes) + "                 ");
+		System.out.print("Used letters:");
+		System.out.print(toString(usedLetters) + " ");
+	}
+	
+	public void getUserImput(){
+		
+		String input = "";
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Type a letter-->");
+		
+		do{
+			    input = sc.next();
+				
+				if(input.length() > 1){
+					
+					System.err.print("One letter at a time!! :)." + " " + "Try again.");
+				}else{
+				    
+					checkLetterIsRight((input.charAt(0)));
+				}
+		}
+		while(input.length() > 1 || tryAgain);
+		
+	}
+	
+	private String toString(char[] a){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.setLength(2 * a.length);
+		
+		for(int i = 0; i < 2 * a.length; i += 2){
+			
+			sb.setCharAt(i , ' ');
+			sb.setCharAt(i + 1 , a[i/2]);
+			
+		}
+		
+		return sb.toString();
+		
+	}
+	
+	private boolean options(String option){
+		
+		
+		 if(option.indexOf("q") >= 0){
+			  
+			  QUIT = true;
+			  return true;
+			  
+	     }
+		 if(option.indexOf("c") >= 0){
+			  
+			  CONTINUE = true;
+			  return true;
+			  
+	     }
+		 
+		 return false;
+	}
+	
+	private void displayOptions(){
+		
+		System.out.println(" ");
+		System.out.println("Press 'c' to continue");
+		System.out.println("Press 'q' to quit");
+	}
+	
+	public void checkForLastMove(){
+		
+		boolean rightInput = false;
+		Scanner sc = new Scanner(System.in);
+		
+		if(playerMistakes >= hangman.length()){
+			
+		    
+			System.out.print("**YOU LOSE!** " + "The secret word is:" );
+			System.out.print("[" + toString(secretLetters) + "]");
+			display();
+			displayOptions();
+		do{
+			
+			  rightInput = options(sc.next());
+				
+			}
+			while(!rightInput);
+				
+		 }
+		if(playerGuessedLetters >= secretLetters.length){
+			
+			System.out.print("**YAY! YOU WIN!!!**");
+			display();
+			displayOptions();
+            do{
+			
+			    rightInput = options(sc.next());
+				
+			}
+			while(!rightInput);
+			
+		}
+			
+		}
+	
+	
+	public  void clearScreen(){
+		
+		for(int i = 0; i < 50; i++){
+			
+			System.out.println(" ");
+		}
+		System.out.println("*Hangman*        " );
+	}
+
+}
+

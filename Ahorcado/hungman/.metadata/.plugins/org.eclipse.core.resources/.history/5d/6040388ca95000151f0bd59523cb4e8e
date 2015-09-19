@@ -1,0 +1,178 @@
+
+import java.util.Scanner;
+
+
+public class Game {
+	
+
+	private char[] secretLetters;
+	private char[] guessedLetters;
+	private char[] usedLetters;
+	private char[] rightLetters;
+	private String hangman = "q(X_X)p";
+	private int tries;
+	private int playerMistakes = 0;
+	private int usedLetterCounter = 0;
+	private boolean tryAgain = false;
+	public boolean QUIT = false;
+	public boolean CONTINUE = false;
+	public boolean NEWGAME = false;
+	
+	public void setSecretWord(String sw){
+		   
+		secretLetters = sw.toCharArray();
+		
+	}
+	
+	public void init(){
+		
+		tries = hangman.length();
+		guessedLetters = new char[secretLetters.length];
+		usedLetters = new char[tries + secretLetters.length];
+		usedLetters[0] = ' ';
+		rightLetters = new char[secretLetters.length];
+		
+		for(int i = 0; i < secretLetters.length; i++){
+			
+			guessedLetters[i] = '_';
+			
+		}
+		
+	}
+	
+	private boolean isRepeated(char l){
+		
+		for(int i = 0; i < usedLetters.length; i++){
+			
+			if(usedLetters[i] == l){
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean checkLetterIsRight(char l){
+		
+		boolean rightAnswer = false;
+		
+		if(!isRepeated(l)){
+		
+			usedLetters[usedLetterCounter++] = l;
+			tryAgain = false;
+		}else{
+			
+			tryAgain = true;
+			System.out.print("You tried this letter already!");
+		}
+		
+		for(int i = 0; i < secretLetters.length; i++){
+			
+			if(secretLetters[i] == l){
+				
+				rightLetters[i] = l;
+				guessedLetters[i] = l;
+				rightAnswer = true;
+				
+			}
+		}
+		
+		if(!rightAnswer && !tryAgain){
+			
+			playerMistakes++;
+		}
+		
+		
+	   return rightAnswer;
+	}
+	
+	
+	public void display(){
+		
+		//layout[0] = guessedLetters.toString();
+		System.out.print(toString(guessedLetters) + "      ");
+		System.out.print(hangman.substring(0, playerMistakes) + "                 ");
+		System.out.print(toString(usedLetters) + " ");
+	}
+	
+	public void getUserImput(){
+		
+		String input = "";
+		Scanner sc = new Scanner(System.in);
+		System.out.print("                 Type a letter.");
+		
+		do{
+			    input = sc.next();
+				
+				if(input.length() > 1){
+					
+					System.out.print("One letter at a time!! :)." + " " + "Try again.");
+				}else{
+				    
+					checkLetterIsRight((input.charAt(0)));
+				}
+		}
+		while(input.length() > 1 || tryAgain);
+		
+	}
+	
+	private String toString(char[] a){
+		
+		StringBuffer sb = new StringBuffer();
+		sb.setLength(2 * a.length);
+		
+		for(int i = 0; i < 2 * a.length; i += 2){
+			
+			sb.setCharAt(i , ' ');
+			sb.setCharAt(i + 1 , a[i/2]);
+			
+		}
+		
+		return sb.toString();
+		
+	}
+	
+	public void checkForLastMove(){
+		
+		if(playerMistakes >= hangman.length()){
+			
+		    String option = "";
+			System.out.print("**YOU LOSE!**");
+			Scanner sc = new Scanner(System.in);
+			display();
+			System.out.println("Press 'n' for a new game");
+			System.out.println("Press 'c' to continue");
+			System.out.println("Press 'q' to quit");
+			option = sc.next();
+			
+			while(option.indexOf("n") < 0|| option.indexOf("q") < 0 ||
+					option.indexOf("c") < 0){
+				
+				  if(option.indexOf("q") >= 0){
+					  
+					  QUIT = true;
+					  System.out.print("quit");
+					  
+					  
+					  
+				  }
+					
+				}
+				
+			}
+			
+		}
+	
+	
+	public static void clearScreen(){
+		
+		for(int i = 0; i < 50; i++){
+			
+			System.out.println(" ");
+		}
+		System.out.println("*Game*       " + "*Tries left*" + "             *Used letters*");
+	}
+
+}
+
