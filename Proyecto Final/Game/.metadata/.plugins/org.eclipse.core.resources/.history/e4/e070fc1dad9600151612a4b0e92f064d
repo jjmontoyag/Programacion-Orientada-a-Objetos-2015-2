@@ -1,0 +1,79 @@
+package model;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+import java.awt.event.KeyEvent;
+
+import model.Particle.Mode;
+
+public abstract class Player {
+	
+	 public Circle circle;
+	 public Bullet bullet;
+	 protected ParticleSystem ps;
+	 public boolean bulletInAir;
+	 public MyVector position;
+	 public Display display;
+	 public int c;
+	 protected int dir;
+	 //test
+	 
+	 public Player(int x, int y, int r){
+		 ps = new ParticleSystem(x, y, 5, 5, Color.BLACK, Mode.EXPLOSION);
+		 position = new MyVector(x, y);
+		 circle = new Circle((int)position.x, (int)position.y, r);
+		 bullet = new Bullet((int)position.x, (int)position.y);
+		 display = new Display(x - 10, y);
+		 bullet.shoot = true;
+		 bulletInAir = false;
+		 c = 12;
+	 }
+	 
+	 public void listenForKeyReleased(KeyEvent ke){
+		display.listenForKeyReleased(ke);
+	 }
+	
+	 public void init(){
+		bullet.init();
+		display.init();
+	}
+	 
+	protected void restartBullet(){
+		if(bullet.circle.x > 1100 || bullet.circle.x < -100 || bullet.circle.y > 800 ||
+				bullet.destroyBullet){
+			if(bullet.destroyBullet)//makes particles show when they hit a tile
+			    ps.restart((int)bullet.position.x, (int)bullet.position.y);
+			bullet.position = position;
+			bullet.destroyBullet = false;
+			bulletInAir = false;
+			bullet.shoot = false;
+		}
+	}
+	 
+	 public void update(){
+		
+		 if(display.shootNow && !bulletInAir){
+		   bullet.shoot = true;
+	       display.shootNow = false;
+	       bulletInAir = true;
+		 }
+		 if(bulletInAir){
+		 restartBullet();
+		 bullet.update();
+		 bullet.fire(display.angle, display.hp, dir);
+		 bullet.hideParticles = false;
+		 }else{
+			 bullet.hideParticles = true;
+			 bullet.repositionParticles(position.x, position.y);
+		 }
+		 
+		 ps.update();
+	 }
+	 public void updateDisplay(KeyEvent ke){
+		 display.update(ke);
+	 }
+	 public abstract void draw(Graphics graphics);
+
+
+}

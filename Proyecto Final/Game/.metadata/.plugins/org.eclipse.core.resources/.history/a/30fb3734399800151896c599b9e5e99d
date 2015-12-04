@@ -1,0 +1,55 @@
+package controller;
+
+
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+
+import model.*;
+import model.Level.Winner;
+
+
+public class GameManager {
+	
+	public enum GameStates{INTRO(0), OPTIONS(1), LEVEL(2);
+		private int value;
+		private GameStates(int value){
+			this.value = value;
+		}
+	}
+	//private Level level;
+	private Winner winner;
+	
+	public GameManager(){
+		winner = Winner.NONE;
+		//level = new Level();
+	}
+	
+	public void init(){
+		//level.init();
+	}
+	
+	public void load(){
+		///*level.load();
+	}
+	public Winner getWinner(){
+		return winner;
+	}
+	public void update(){
+		/*level.update();
+		if(level.isMatchOver())
+		winner = level.getWinner();*/
+	}
+	
+	public void updatePlayerDisplay(KeyEvent ke){
+		//level.updateDisplay(ke);
+	}
+	
+	public void listenForKeyReleased(KeyEvent ke){
+		//level.listenForKeyReleased(ke);
+	}
+	public void draw(Graphics graphics){
+		//level.draw(graphics);
+	}
+
+}

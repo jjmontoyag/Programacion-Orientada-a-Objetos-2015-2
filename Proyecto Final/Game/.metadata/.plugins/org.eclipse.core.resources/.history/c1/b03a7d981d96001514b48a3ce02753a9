@@ -1,0 +1,78 @@
+package model;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class Bullet {
+	
+	public boolean shoot; 
+	public boolean destroyBullet;
+	public Circle circle;
+	public MyVector position;
+	private MyVector velocity;
+	private MyVector direction;
+	private MyVector gravity;
+	private double maxVelocityY;
+	private double delta;
+	
+	
+	
+	public Bullet(int x, int y){
+		circle = new Circle(x, y, 20);
+		position = new MyVector(x, y);
+		gravity = new MyVector(0, 3);
+		delta = 0.35d;
+		maxVelocityY = 45;
+		shoot = false;
+		destroyBullet = true;
+		direction = new MyVector(0, 0);
+		velocity = new MyVector(new MyVector(0, 0));
+	}
+	
+	public void init(){
+		
+	}
+	
+    public void update(){
+    	if(!destroyBullet){
+    	position = position.add(velocity.scale(delta));//position = position + delta * velocity
+    	velocity = velocity.add(gravity.scale(delta));//velocity = velocity + delta * gravity
+    	
+    	//Limit for max velocity in the y axis
+    	if(velocity.y > maxVelocityY)
+    	     velocity.y = maxVelocityY;
+    	//no negative values for y
+    	//if(position.y > 700)
+   	        // velocity.y = 0;
+    	
+        circle.x = (int)position.x;
+        circle.y = (int)position.y;
+    	}else{
+    	// Explodes
+    	}
+    }
+    
+    public void fire(double theta, double force, int dir){
+    	if(shoot){
+    		double rad = theta * (Math.PI/180);
+    		direction = new MyVector(dir * Math.cos(rad), -Math.sin(rad));
+    		velocity = new MyVector(direction.scale(force));
+    		shoot = false;
+    	}
+	}
+    
+    public void draw(Graphics graphics){
+    	if(true){
+    	Graphics2D g = (Graphics2D)graphics;
+    	g.setStroke(new BasicStroke(1));
+    	graphics.setColor(Color.BLACK);
+    	graphics.fillOval((int)position.x, (int)position.y, circle.r, circle.r);
+    	graphics.setColor(Color.WHITE);
+    	graphics.fillOval((int)position.x + 5, (int)position.y - 1, 10, 10);
+    	graphics.setColor(Color.RED);
+    	graphics.drawOval((int)circle.x, (int)circle.y , 20, 20);
+      }
+    }
+}

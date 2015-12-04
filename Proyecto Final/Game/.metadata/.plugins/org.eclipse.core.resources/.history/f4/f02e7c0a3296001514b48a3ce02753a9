@@ -1,0 +1,75 @@
+package model;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.sql.Time;
+import java.util.Date;
+
+public class Particle{
+	
+	public MyVector position;
+	private MyVector velocity;
+	private MyVector gravity;
+	private MyVector direction;
+	public int width;
+	public int height;
+	private Color c;
+	public enum Mode{RADIAL, EXPLOSION};
+	private Mode mode;
+	private double maxVelocityY;
+	private double delta;
+	private Date t;
+	private double m;
+	private double mm;
+	
+
+	public Particle(int x, int y, int width, int height, MyVector direction, 
+			Color c, Mode mode) {
+		position = new MyVector(x, y);
+		velocity = new MyVector(direction.scale(20));
+		this.direction = direction;
+		this.width = width;
+		this.height = height;
+		this.c = c;
+		this.mode = mode;
+		gravity = new MyVector(0, 3);
+		delta = 0.35d;//0.35
+		maxVelocityY = 40;
+	    t = new Date();
+		m = t.getTime();
+		
+	}
+	
+	public void update(){
+		
+		position = position.add(velocity.scale(delta));//position = position + delta * velocity
+    	velocity = velocity.add(gravity.scale(delta));//velocity = velocity + delta * gravity
+    	
+    	//Limit for max velocity in the y axis
+    	if(velocity.y > maxVelocityY)
+    	     velocity.y = maxVelocityY;
+    	
+        if(new Date().getTime() - m > 3000){
+        	position = new MyVector(50, 50);
+        	m = new Date().getTime();
+        	velocity = new MyVector(direction.scale(20));
+        }
+    	
+		
+	}
+		
+	
+	
+	public void shoot(){
+		
+	
+	}
+		
+		
+	public void draw(Graphics graphics){
+		graphics.setColor(c);
+		graphics.fillRect((int)position.x, (int)position.y, width, height);
+		
+	}
+	
+}

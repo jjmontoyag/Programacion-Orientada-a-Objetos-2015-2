@@ -1,0 +1,43 @@
+package model;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ArrayList;
+
+import model.Particle.Mode;
+
+
+public class ParticleSystem {
+	
+	private ArrayList<Particle> particles;
+	private Particle p;
+	private int number = 10;
+	private MyVector position;
+	private MyVector direction;
+	
+	public ParticleSystem(int x, int y){
+		double rad = 45 * (Math.PI/180);
+		direction = new MyVector(Math.cos(rad), -Math.sin(rad));
+		p = new Particle(x, y, 100, 300, direction, Color.RED, Mode.RADIAL);
+	}
+	
+	public void update(){
+		for(int i = 0; i < number; i++){
+			
+		}
+		p.update();
+	}
+	
+	public void emitter(){
+		
+	}
+	
+	public void draw(Graphics graphics){
+		for(int i = 0; i < number; i++){
+			
+		}
+			p.draw(graphics);
+	}
+	
+
+}

@@ -1,0 +1,55 @@
+package controller;
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import controller.GameManager.GameStates;
+import model.Level.Winner;
+
+public abstract class State {
+	
+	protected String arenaName;
+	protected boolean changeState;
+	protected GameStates nextState;
+	public boolean isMatchOver;
+	protected Winner winner;
+	protected State(){
+		changeState = false;
+		isMatchOver = false;
+	}
+	
+	public boolean isStateChange(){
+		return changeState;
+	}
+	
+	public GameStates getNextState(){
+		return nextState;
+	}
+	
+	public void resetWinner(){
+		winner = Winner.NONE;
+	}
+	
+	public Winner getWinner(){
+		return Winner.NONE;
+	}
+	
+	public String getNewArenaName(){
+		return "null";
+	}
+	public void setNewArenaName(String arenaName){
+		this.arenaName = arenaName;
+	}
+	public abstract void resetState();
+	public abstract void init();
+	
+	public abstract void load();
+	
+	public abstract void update();
+	
+	public abstract void updatePlayerDisplay(KeyEvent ke);
+	
+	public abstract void listenForKeyReleased(KeyEvent ke);
+	
+	public abstract void draw(Graphics graphics);
+
+}

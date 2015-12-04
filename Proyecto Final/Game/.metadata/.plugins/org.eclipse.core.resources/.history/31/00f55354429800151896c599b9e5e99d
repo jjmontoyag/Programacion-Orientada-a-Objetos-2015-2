@@ -1,0 +1,32 @@
+package controller;
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import controller.GameManager.GameStates;
+
+public abstract class State {
+	
+	public boolean changeState;
+	private GameStates nextState;
+	
+	public State(){
+		changeState = false;
+	}
+	
+	public GameStates getNextState(){
+		return nextState;
+	}
+	
+	public abstract void init();
+	
+	public abstract void load();
+	
+	public abstract void update();
+	
+	public abstract void updatePlayerDisplay(KeyEvent ke);
+	
+	public abstract void listenForKeyReleased(KeyEvent ke);
+	
+	public abstract void draw(Graphics graphics);
+
+}

@@ -1,0 +1,61 @@
+package controller;
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+
+import model.Level;
+import model.Level.Winner;
+
+public class LevelState extends State {
+	
+	private Level level;
+	private Winner winner;
+	
+	public LevelState() {
+		super();
+		level = new Level();
+		winner = Winner.ONE;
+	}
+	
+	public Winner getWinner(){
+		return winner;
+	}
+
+	@Override
+	public void init() {
+		level.init();
+	}
+
+	@Override
+	public void load() {
+		level.load();
+	}
+
+	@Override
+	public void update() {
+		if(level.isMatchOver()){
+			winner = level.getWinner();
+			isMatchOver = true;
+		}
+		level.update();
+		
+	}
+
+	@Override
+	public void updatePlayerDisplay(KeyEvent ke) {
+		level.updateDisplay(ke);
+	}
+
+	@Override
+	public void listenForKeyReleased(KeyEvent ke) {
+		level.listenForKeyReleased(ke);
+	}
+
+	@Override
+	public void draw(Graphics graphics) {
+		level.draw(graphics);
+	}
+	
+	
+
+}

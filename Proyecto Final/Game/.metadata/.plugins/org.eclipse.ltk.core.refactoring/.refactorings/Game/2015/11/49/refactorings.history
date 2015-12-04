@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;Game/src/assets/Tank Firing-SoundBible.com-998264747.wav&apos; to &apos;shoot.wav&apos;" description="Rename resource &apos;Tank Firing-SoundBible.com-998264747.wav&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/assets/Tank Firing-SoundBible.com-998264747.wav" name="shoot.wav" stamp="1448915018747" updateReferences="true"/>&#x0A;&#x0A;</session>

@@ -1,0 +1,48 @@
+package controller;
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+
+public class ChooseState extends State {
+	
+	public ChooseState(){
+		super();
+	}
+
+	@Override
+	public void init() {
+
+		
+	}
+
+	@Override
+	public void load() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updatePlayerDisplay(KeyEvent ke) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void listenForKeyReleased(KeyEvent ke) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void draw(Graphics graphics) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

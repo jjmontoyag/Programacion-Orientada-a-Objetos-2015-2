@@ -1,0 +1,29 @@
+package model;
+
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class Character2 extends Player {
+	
+	public Character2(int x, int y, int r){
+		super(x, y, r);
+		c = 10;
+	}
+
+	@Override
+	public void draw(Graphics graphics) {
+		 Graphics2D g = (Graphics2D)graphics;
+		 g.setStroke(new BasicStroke(1));
+		 graphics.setColor(Color.BLACK);
+		 graphics.fillOval((int)position.x - 20, (int)position.y, 50, 50);
+		 bullet.draw(graphics);
+		 display.draw(graphics);
+		 graphics.setColor(Color.RED);
+		 g.setStroke(new BasicStroke(25));
+		 g.drawLine((int)position.x + c, (int)position.y + c, (int) (position.x + c - 25 * Math.cos(display.rad)), (int) (position.y + c - 25 * Math.sin(display.rad)));
+		
+	}
+
+}

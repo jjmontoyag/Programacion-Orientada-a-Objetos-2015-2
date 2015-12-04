@@ -1,0 +1,64 @@
+package controller;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.util.Date;
+
+import model.GameUtils;
+import model.MyVector;
+
+public class IntroState extends State {
+
+	private MyVector position;
+	private Date time;
+	private double creationTime;
+	
+	public IntroState() {
+		super();
+		time = new Date();
+		creationTime = time.getTime();
+	}
+	@Override
+	public void init() {
+		position = new MyVector(25, 25);
+	}
+
+	@Override
+	public void load() {
+		
+		
+	}
+
+	@Override
+	public void update() {
+		if(GameUtils.isTimeUp(creationTime, 10000))
+			System.out.print("Change state!");
+		
+	}
+
+	@Override
+	public void updatePlayerDisplay(KeyEvent ke) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void listenForKeyReleased(KeyEvent ke) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void draw(Graphics graphics) {
+		graphics.setColor(Color.BLACK);
+		graphics.drawRoundRect((int)position.x, (int)position.y, 950, 650, 2, 2);
+		graphics.setFont(new Font("TimesRoman",Font.ITALIC, 40));
+		graphics.drawString("By:", 100, 300);
+		graphics.drawString("Juan David Balcazar Bedoya", 100, 350);
+		graphics.drawString("John Jairo Montoya Gomez", 100, 400);
+		
+	}
+
+}

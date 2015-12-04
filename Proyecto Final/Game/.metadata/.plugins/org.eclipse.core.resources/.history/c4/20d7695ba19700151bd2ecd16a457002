@@ -1,0 +1,439 @@
+package model;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
+public class Level {
+	
+	protected ArrayList<Tile> tiles;
+	protected ArrayList<Tile> tilesToRemove;
+	protected char[][] level;
+	protected char[][] buffer;
+	protected Character player;
+	protected Character2 player2;
+	protected int levelWidth;
+	protected int levelHeight;
+	protected int gridUnit = 10;
+	protected boolean matchOver;
+	public enum Winner{NONE, ONE, TWO}
+	private Winner winner;
+	
+	public Level(){
+		tiles = new ArrayList<Tile>();
+		winner = Winner.NONE;
+		matchOver = false;
+		levelWidth = 1000/gridUnit;
+		levelHeight = 700/gridUnit;
+		level = new char[levelHeight + 8][levelWidth + 8];
+		buffer =  new char[levelHeight + 8][levelWidth + 8];
+		
+	}
+	public boolean isMatchOver(){
+		return matchOver;
+	}
+	public Winner getWinner(){
+		return winner;
+	}
+	public void init(){
+		
+		
+	}
+	//Creates a new tile at (i, row) in the map with the specified color
+	public void createCustomTile(int j, int row, Color c){
+		 Rectangle r = new Rectangle(j * gridUnit, row * gridUnit, gridUnit, gridUnit);
+	     tiles.add(new Tile(r, c));
+	}
+	public void createCustomTile(int j, int row, Color c, boolean solid, boolean indestructible){
+		 Rectangle r = new Rectangle(j * gridUnit, row * gridUnit, gridUnit, gridUnit);
+	     tiles.add(new Tile(r, c, solid, indestructible));
+	}
+	//Loads graphics in the level
+	public void load(){
+		String path = "C:/Users/jjmontoyag/Documents/OOPTALLERES/game/Game/src/assets/level1.txt";
+		String line;
+		char mapChar;
+		int row = 0;
+		try {
+			//Reads file and creates objects
+			BufferedReader br = new BufferedReader(new FileReader(path));
+			
+			while((line = br.readLine()) != null){
+				for(int j = 0; j < line.length(); j++){
+					mapChar = line.charAt(j);
+					buffer[row][j] = 'b';
+					level[row][j] = mapChar;//Stores map for editing and removal
+					if(mapChar == '1'){
+					   createCustomTile(j, row, new Color(0, 0, 0));
+					}
+					if(mapChar == '2'){
+					   createCustomTile(j, row, new Color(102, 102, 102));
+					}
+					if(mapChar == '3'){
+						   createCustomTile(j, row, new Color(191, 191, 191));
+						}
+					if(mapChar == '4'){
+						   createCustomTile(j, row, new Color(153, 76, 0));
+						}
+					if(mapChar == '5'){
+						   createCustomTile(j, row, new Color(230, 114, 0));
+						}
+					if(mapChar == '6'){
+						   createCustomTile(j, row, new Color(255, 178, 102));
+						}
+					if(mapChar == '7'){
+						   createCustomTile(j, row, new Color(0, 153, 204), false, false);//blue
+						}
+					if(mapChar == '8'){
+						   createCustomTile(j, row, new Color(26, 198, 255), false, false);
+						}
+					if(mapChar == '9'){
+						   createCustomTile(j, row, new Color(179, 236, 255), false, false);
+						}
+					if(mapChar == 'c'){
+						   createCustomTile(j, row, new Color(0, 102, 0), false, false);
+						}
+					if(mapChar == 'd'){
+						   createCustomTile(j, row, new Color(0, 179, 0), false, false);
+						}
+					if(mapChar == 'e'){
+						   createCustomTile(j, row, new Color(128, 255, 128), false, false);
+						}
+					if(mapChar == 'f'){
+						   createCustomTile(j, row, new Color(153, 38, 0));
+						}
+					if(mapChar == 'g'){
+						   createCustomTile(j, row, new Color(204, 51, 0));
+						}
+					if(mapChar == 'h'){
+						   createCustomTile(j, row, new Color(255, 198, 179));
+						}
+					if(mapChar == 'i'){
+						   createCustomTile(j, row, new Color(255, 255, 255), false, false);
+						}
+					if(mapChar == 'l'){
+						   createCustomTile(j, row, new Color(100, 100, 100),true, true);
+						}
+					
+					if(mapChar == 'a'){
+						player = new Character(j * gridUnit, row * gridUnit, 40);
+						player.init();
+						}
+					if(mapChar == 'b'){
+						player2 = new Character2(j * gridUnit, row * gridUnit, 40);
+						player2.init();
+						}
+				}
+				row++;
+			}
+			
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println("THE FILE 'levelx.txt' IS NOT IN THE RIGHT FOLDER OR IS MISSING!!!!!!!!!!");
+			System.exit(0);
+		}
+		
+		
+	}
+	
+	private boolean isCanInfect(int i, int j){
+		if(level[i][j] != '0' && level[i][j] != 'l')
+			return true;
+		    return false;
+	}
+	
+	private boolean isBroken(int i, int j){
+		if(level[i - 1][j] == 'l' || level[i - 1][j + 1] == 'l' ||
+		   level[i][j + 1] == 'l' || level[i + 1][j + 1] == 'l' ||
+		   level[i + 1][j] == 'l' || level[i - 1][j - 1] == 'l' ||
+		   level[i][j - 1] == 'l' || level[i - 1][j - 1] == 'l')
+		   return true;
+		   return false;
+	}
+	
+	public void update(){
+		/*boolean leave = false;
+		boolean useRight= true;
+		boolean shapeFound = false;
+		boolean lineFound = false;
+		boolean try1 = false;
+		boolean try2 = false;
+		
+		
+		for(int i = 0; i < levelHeight; i++){
+			for(int j = 0; j < levelWidth; j++){
+				if(isCanInfect(i, j)){
+					if(isBroken(i, j)){
+						leave = true;
+						break;
+					}
+					level[i][j] = 'x';
+					
+					////
+			if(useRight){
+					if(level[i - 1][j] != '0' && isCanInfect(i - 1, j)){//look up
+						if(level[i][j - 1] != '0' && isCanInfect(i, j - 1)){
+							if(level[i][j - 1] == 'x' && isCanInfect(i, j - 1)) {leave = true;shapeFound = true;break;}
+							j-=2;
+							useRight = false;
+						}else {
+						if(level[i - 1][j] == 'x'){leave = true;shapeFound = true;break;}
+						level[i - 1][j] = 'x';
+						i--;j--;
+						}
+					}else if(level[i - 1][ j + 1] != '0'  && isCanInfect(i - 1, j + 1)){//look to the upper right corner
+						if(level[i - 1][ j + 1] == 'x') {leave = true;shapeFound = true;break;}
+						level[i - 1][ j + 1] = 'x';
+						i--;
+					}else if(level[i][j + 1] != '0' && isCanInfect(i, j + 1)){//look to the right
+						if(level[i][j + 1] == 'x'){leave = true;shapeFound = true;break;}
+						level[i][j + 1] = 'x';
+					}else if(level[i + 1][j + 1] != '0' && isCanInfect(i + 1, j + 1)){//look to the lower right corner
+						if(level[i + 1][j + 1] == 'x') {leave = true;shapeFound = true;break;}
+						level[i + 1][j + 1] = 'x';
+						i++;
+					}else{
+						useRight = false;
+			            try1 = true;
+					}
+			}
+			
+			if(!useRight){
+					/////
+					if(level[i + 1][j] != '0' && isCanInfect(i + 1, j)){ //look down
+						if(level[i][j + 1] != '0' && isCanInfect(i, j + 1)){
+							if(level[i][j + 1] == 'x' && isCanInfect(i, j + 1)) {shapeFound = true;break;}
+							useRight = true;
+						}else {
+						if(level[i + 1][j] == 'x') {leave = true;shapeFound = true;break;}
+						level[i + 1][j] = 'x';
+						i++;j--;
+					  }
+					}else if(level[i + 1][j - 1] != '0' && isCanInfect(i + 1, j - 1)){ //look to the lower left corner
+						if(level[i + 1][j - 1] == 'x') {leave = true;shapeFound = true;break;}
+						level[i + 1][j - 1] = 'x';
+						j-=2;i++;
+					}
+					else if(level[i][j - 1] != '0' && isCanInfect(i, j - 1)){//look to the left
+						if(level[i][j - 1] == 'x') {leave = true;shapeFound = true;break;}
+						level[i][j - 1] = 'x';
+						j-=2;
+					}else if(level[i - 1][j - 1] != '0' && isCanInfect(i - 1, j - 1)){//look to the upper left corner
+						if(level[i - 1][j - 1] == 'x') {leave = true;shapeFound = true;break;}
+						level[i - 1][j - 1] = 'x';
+						j-=2;i-=1;
+					}else{
+						useRight = true;
+						j--;//stay at the same location
+						try2 = true;
+					}
+					
+			}
+					
+					if(try1 && try2){
+						lineFound = true;
+						leave = true;
+						break;
+					}
+					try1 = false;
+					try2 = false;
+						
+				}
+				
+			}//Inner for
+			
+			if(leave)
+				break;
+			
+		}//Outer for
+		
+		
+		
+		
+		if(shapeFound){
+			//The shape obtained to buffer
+			for(int ii = 0; ii < levelHeight ; ii++){
+				for(int jj = 0; jj < levelWidth ; jj++){
+					if(level[ii][jj] == 'x' || level[ii][jj] == 'q'){
+						buffer[ii][jj] = 'x';
+						
+					}
+				}
+			}
+		//sweeps buffer to get only the shape we want
+		//from left to right
+		for(int ii = 0; ii < levelHeight ; ii++){
+			for(int jj = 0; jj < levelWidth ; jj++){
+				if(buffer[ii][jj] == 'x'){
+					buffer[ii][jj] = 'b';
+					break;
+				}else buffer[ii][jj] = 's';
+			}
+			
+		}
+		//from right to left
+		for(int ii = 0; ii < levelHeight ; ii++){
+			for(int jj = levelWidth - 1; jj >= 0 ; jj--){
+				if(buffer[ii][jj] == 'x'){
+					buffer[ii][jj] = 'b';
+					break;
+				}else buffer[ii][jj] = 's';
+			}
+			
+		}
+		//removes x's left
+		for(int ii = 0; ii < levelHeight ; ii++){
+			for(int jj = 0; jj < levelWidth ; jj++){
+				if(buffer[ii][jj] == 'x')
+					buffer[ii][jj] = 'b';
+			}
+			
+		}
+		//remove tiles shown in the buffer
+		for(int ii = 0; ii < levelHeight ; ii++){
+			for(int jj = 0; jj < levelWidth ; jj++){
+				if(buffer[ii][jj] == 'b'){
+					//removeTileAt(ii, jj);
+					level[ii][jj] = '0';
+					animateTileAt(ii, jj);
+					
+				}
+			}
+			
+		}
+		//clear buffer
+		for(int ii = 0; ii < levelHeight ; ii++){
+			for(int jj = 0; jj < levelWidth ; jj++){
+				if(buffer[ii][jj] == 's'){
+					buffer[ii][jj] = 'b';
+				}
+			}
+			
+		}
+		
+	}
+		if(lineFound){
+		for(int ii = 0; ii < levelHeight ; ii++){
+			for(int jj = 0; jj < levelWidth ; jj++){
+				if(level[ii][jj] == 'x' || level[ii][jj] == 'q'){
+					animateTileAt(ii, jj);
+					
+				}
+			}
+		}
+		
+	}
+		
+		//remove x's in level
+				for(int i = 0; i < levelHeight; i++){
+					for(int j = 0; j < levelWidth; j++){
+						if(level[i][j] == 'x'){
+						   level[i][j] = 'q';
+						}
+					}
+				}*/
+		
+		
+		//collision
+		tilesToRemove = new ArrayList<Tile>();
+		checkCollision(player);
+		checkCollision(player2);
+		//REmove tiles in the explotion
+		for(Tile t : tilesToRemove){
+			tiles.remove(t);
+			//Remove tile from the map too
+			level[t.rectangle.y/gridUnit][t.rectangle.x/gridUnit] = '0';
+		}
+
+		//bullet-bullet collision
+		if(player.bullet.circle.intersects(player2.bullet.circle)){
+			player.bullet.destroyBullet = true;
+			player2.bullet.destroyBullet = true;
+		}
+		//bullet-player collision
+		if(player.circle.intersects(player2.bullet.circle)){
+			player.setPlayerDead(true);
+			player2.bullet.destroyBullet = true;
+			winner = Winner.TWO;
+			matchOver = true;
+		}
+		if(player2.circle.intersects(player.bullet.circle)){
+			player2.setPlayerDead(true);
+			player.bullet.destroyBullet = true;
+			winner = Winner.ONE;
+			matchOver = true;
+		}
+			
+		//circle to normal size
+		player.bullet.circle.r = 20;
+		player2.bullet.circle.r = 20;
+		player.update();//Update player
+		player2.update();//Update player2
+		
+	}
+	
+	private void checkCollision(Player playera){
+		for(Tile t : tiles){
+			if(t.rectangle.y > 700)
+				tilesToRemove.add(t);//removes tiles if they are not on the screen anymore
+			if(playera.bullet.circle.intersects(t.rectangle)){//Checks tile-bullet collision
+			if(t.solid)//Leaves do not make the bullet explode
+			playera.bullet.destroyBullet = true;//Solid tiles make bullets explode
+			playera.bullet.circle.r = 50;//Explosion radius
+			if(playera.bullet.circle.intersects(t.rectangle)){//Checks collision with r=50
+			if(!t.indestructible && t.solid)
+			tilesToRemove.add(t);//Stores tiles to be removed
+			else if(!t.solid)//If it is a leaf, it will fall and be removed after leaving the screen
+				t.wasHit = true;
+			}
+		}
+			t.update();//Updates all tiles
+	}
+	}
+	//Updates the player's display
+	public void updateDisplay(KeyEvent ke){
+		player.display.update(ke);
+		player2.display.update(ke);
+	}
+	
+	//Listens for key released
+	public void listenForKeyReleased(KeyEvent ke){
+		player.display.listenForKeyReleased(ke);
+		player2.display.listenForKeyReleased(ke);
+		
+	}
+	
+	
+	//removes tile at the location (i, j) in the map
+    public void removeTileAt(int i, int j){
+		
+		for(Tile t : tiles){
+			if(t.rectangle.x/gridUnit == j && t.rectangle.y/gridUnit == i){
+				tiles.remove(t);
+				break;
+			}
+		}
+	}
+ public void animateTileAt(int i, int j){
+		
+		for(Tile t : tiles){
+			if(t.rectangle.x/gridUnit == j && t.rectangle.y/gridUnit == i){
+				t.wasHit = true;;
+				break;
+			}
+		}
+	}
+    
+	public void draw(Graphics graphics){
+		for(Tile t : tiles)
+			t.draw(graphics);
+		player.draw(graphics);
+		player2.draw(graphics);
+		
+	}
+
+}

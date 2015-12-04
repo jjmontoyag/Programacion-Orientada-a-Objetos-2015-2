@@ -1,0 +1,71 @@
+package controller;
+
+
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
+import model.*;
+import model.Level.Winner;
+
+
+public class GameManager {
+	
+	private ArrayList<State> states;
+	public enum GameStates{INTRO(0), OPTIONS(1), LEVEL(2);
+		private int value;
+		private GameStates(int value){
+			this.value = value;
+		}
+	}
+	//private Level level;
+	private Winner winner;
+	
+	public GameManager(){
+		winner = Winner.NONE;
+		states = new ArrayList<State>();
+		//level = new Level();
+		states.add(new IntroState());
+	}
+	
+	public void init(){
+		//level.init();
+		for(State state : states)
+			state.init();
+	}
+	
+	public void load(){
+		///*level.load();
+		for(State state : states)
+			state.load();
+	}
+	public Winner getWinner(){
+		return winner;
+	}
+	public void update(){
+		/*level.update();
+		if(level.isMatchOver())
+		winner = level.getWinner();*/
+		for(State state : states)
+			state.update();
+	}
+	
+	public void updatePlayerDisplay(KeyEvent ke){
+		//level.updateDisplay(ke);
+		for(State state : states)
+			state.updatePlayerDisplay(ke);
+	}
+	
+	public void listenForKeyReleased(KeyEvent ke){
+		//level.listenForKeyReleased(ke);
+		for(State state : states)
+			state.listenForKeyReleased(ke);
+	}
+	public void draw(Graphics graphics){
+		//level.draw(graphics);
+		for(State state : states)
+			state.draw(graphics);
+	}
+
+}

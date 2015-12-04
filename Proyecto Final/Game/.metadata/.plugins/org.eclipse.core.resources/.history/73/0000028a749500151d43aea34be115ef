@@ -1,0 +1,77 @@
+package model;
+
+import java.awt.image.BufferedImage;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+
+
+public class Character{
+	
+	 public Circle circle;
+	 public Bullet bullet;
+	 public boolean bulletInAir;
+	 public MyVector position;
+	 public Display display;
+	 
+	 //test
+	 private Image img;
+	 private Graphics2D helper;
+	 
+	 public Character(int x, int y, int r){
+		 position = new MyVector(x, y);
+		 circle = new Circle((int)position.x, (int)position.y, r);
+		 bullet = new Bullet((int)position.x, (int)position.y);
+		 display = new Display(x - 10, y);
+		 bullet.shoot = false;
+		 bulletInAir = false;
+	 }
+	 
+	 public void listenForKeyReleased(KeyEvent ke){
+		display.listenForKeyReleased(ke);
+	 }
+	
+	 public void init(){
+		bullet.init();
+		display.init();
+	}
+	 
+	private void restartBullet(){
+		if(bullet.circle.x > 1000 || bullet.circle.x < 0 || bullet.circle.y > 700 ||
+				bullet.destroyBullet){
+			bullet.position = position;
+			bullet.destroyBullet = false;
+			bulletInAir = false;
+		}
+	}
+	 
+	 public void update(){
+		 restartBullet();
+		 if(display.shootNow && !bulletInAir){
+		   bullet.shoot = true;
+	       display.shootNow = false;
+	       bulletInAir = true;
+		 }
+		 if(bulletInAir){
+		 bullet.fire(display.angle, display.hp);
+		 bullet.update();
+		 }
+	 }
+	 public void updateDisplay(KeyEvent ke){
+		 display.update(ke);
+	 }
+	 public void draw(Graphics graphics){
+		 graphics.setColor(Color.BLACK);
+		 graphics.drawOval((int)position.x, (int)position.y, 50, 50);
+		 bullet.draw(graphics);
+		 display.draw(graphics);
+		 graphics.setColor(Color.RED);
+		 Graphics2D g = (Graphics2D)graphics;
+		 g.setStroke(new BasicStroke(3));
+		 g.drawLine((int)position.x, (int)position.y, (int) (position.x + 150 * Math.cos(display.rad)), (int) (position.y - 150 * Math.sin(display.rad)));
+	 }
+
+}

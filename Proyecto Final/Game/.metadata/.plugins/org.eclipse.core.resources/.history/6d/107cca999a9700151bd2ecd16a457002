@@ -1,0 +1,47 @@
+package model;
+
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+public class Tile {
+	
+	public Rectangle rectangle;
+	private Color c;
+	public boolean wasHit = false;
+	public boolean solid = true;
+	public boolean indestructible = false;
+	
+	public Tile(Rectangle rectangle, Color c){
+		this.rectangle = rectangle;
+		this.c = c;
+	}
+	
+	public Tile(Rectangle rectangle, Color c, boolean solid, boolean indestructible){
+		this.rectangle = rectangle;
+		this.c = c;
+		this.solid = solid;
+		this.indestructible = indestructible;
+	}
+	
+	public void init(){
+		
+	}
+	
+	
+	public void update(){
+		if(wasHit)
+			rectangle.y+=2;
+	}
+	
+	
+	public void draw(Graphics graphics){
+		graphics.setColor(c);
+		//graphics.fillRect(rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+		//graphics.fillOval(rectangle.x, rectangle.y, 20, 15);
+		graphics.drawOval(rectangle.x, rectangle.y, 1, 1);
+	
+		
+	}
+
+}

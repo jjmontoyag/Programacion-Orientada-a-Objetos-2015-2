@@ -1,0 +1,63 @@
+package model;
+
+import java.awt.Color;
+import java.awt.Graphics;
+
+public class Particle{
+	
+	public MyVector position;
+	private MyVector velocity;
+	private MyVector gravity;
+	private MyVector direction;
+	public int width;
+	public int height;
+	private Color c;
+	public enum Mode{RADIAL, EXPLOSION};
+	private Mode mode;
+	private double maxVelocityY;
+	double delta;
+
+	public Particle(int x, int y, int width, int height, MyVector direction, 
+			Color c, Mode mode) {
+		position = new MyVector(x, y);
+		velocity = new MyVector(direction.scale(50));
+		this.direction = direction;
+		this.width = width;
+		this.height = height;
+		this.c = c;
+		this.mode = mode;
+		gravity = new MyVector(0, 0.1);
+		delta = 0.9d;//0.35
+		maxVelocityY = 40;
+		
+	}
+	
+	public void update(){
+		
+		position = position.add(velocity.scale(delta));//position = position + delta * velocity
+    	velocity = velocity.add(gravity.scale(delta));//velocity = velocity + delta * gravity
+    	
+    	//Limit for max velocity in the y axis
+    	if(velocity.y > maxVelocityY)
+    	     velocity.y = maxVelocityY;
+    	
+    	
+    	
+		
+	}
+		
+	
+	
+	public void shoot(){
+		
+	
+	}
+		
+		
+	public void draw(Graphics graphics){
+		graphics.setColor(c);
+		graphics.fillRect((int)position.x, (int)position.y, width, height);
+		
+	}
+	
+}

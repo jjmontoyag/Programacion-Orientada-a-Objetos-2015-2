@@ -1,0 +1,50 @@
+package controller;
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+
+import model.Level;
+
+public class LevelState extends State {
+	
+	private Level level;
+	
+	public LevelState() {
+		super();
+		level = new Level();
+	}
+
+	@Override
+	protected void init() {
+		level.init();
+	}
+
+	@Override
+	protected void load() {
+		level.load();
+	}
+
+	@Override
+	protected void update() {
+		level.update();
+		
+	}
+
+	@Override
+	protected void updatePlayerDisplay(KeyEvent ke) {
+		level.updateDisplay(ke);
+	}
+
+	@Override
+	protected void listenForKeyReleased(KeyEvent ke) {
+		level.listenForKeyReleased(ke);
+	}
+
+	@Override
+	protected void draw(Graphics graphics) {
+		level.draw(graphics);
+	}
+	
+	
+
+}

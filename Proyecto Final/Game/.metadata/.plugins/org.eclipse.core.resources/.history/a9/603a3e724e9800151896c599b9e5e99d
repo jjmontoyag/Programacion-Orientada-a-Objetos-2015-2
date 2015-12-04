@@ -1,0 +1,79 @@
+package controller;
+
+
+
+import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+
+import model.*;
+import model.Level.Winner;
+
+
+public class GameManager {
+	
+	private ArrayList<State> states;
+	public enum GameStates{INTRO(0), CHOOSE(1), LEVEL(2);
+		private int value;
+		private GameStates(int value){
+			this.value = value;
+		}
+	}
+	GameStates currentState;
+	private Winner winner;
+	
+	public GameManager(){
+		winner = Winner.NONE;
+		currentState = GameStates.INTRO;
+		states = new ArrayList<State>();
+		//Initialize all states
+		states.add(new IntroState());
+		states.add(new ChooseState());
+		states.add(new LevelState());
+	}
+	
+	public void newState(){
+		
+	}
+	
+	public void init(){
+		states.get(currentState.value).init();
+	}
+	
+	public void load(){
+		states.get(currentState.value).load();
+	}
+	public Winner getWinner(){
+		return winner;
+	}
+	public void resetWinner(){
+		winner = Winner.NONE;
+	}
+	public void update(){
+		State state = states.get(currentState.value);
+		//check winner
+		if(state.isMatchOver){
+			winner = state.getWinner();
+			state.isMatchOver = false;
+			state.resetWinner();
+		}
+		state.update();
+		if(state.isStateChange()){
+			currentState = state.nextState;
+			states.get(currentState.value).init();
+			states.get(currentState.value).load();
+		}
+	}
+	
+	public void updatePlayerDisplay(KeyEvent ke){
+		states.get(currentState.value).updatePlayerDisplay(ke);
+	}
+	
+	public void listenForKeyReleased(KeyEvent ke){
+		states.get(currentState.value).listenForKeyReleased(ke);
+	}
+	public void draw(Graphics graphics){
+		states.get(currentState.value).draw(graphics);
+	}
+
+}

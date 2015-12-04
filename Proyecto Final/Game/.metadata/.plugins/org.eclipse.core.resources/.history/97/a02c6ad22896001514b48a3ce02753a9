@@ -1,0 +1,34 @@
+package model;
+
+import java.awt.Graphics;
+import java.util.ArrayList;
+
+public class ParticleSystem {
+	
+	private ArrayList<Particle> particles;
+	private int number = 10;
+	private MyVector position;
+	
+	public ParticleSystem(int x, int y){
+		
+	}
+	
+	public void update(){
+		for(int i = 0; i < number; i++){
+			
+		}
+	}
+	
+	public void emitter(){
+		
+	}
+	
+	public void draw(Graphics graphics){
+		for(int i = 0; i < number; i++){
+			
+		}
+			
+	}
+	
+
+}
